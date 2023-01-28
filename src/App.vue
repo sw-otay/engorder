@@ -3,7 +3,8 @@ import { ref, computed } from 'vue'
 
   const inputSent = ref('')
   const testSent = ref('')
-  const testSentKeep = ref('')
+  const testSentKeepFront = ref('')
+  const testSentKeepBack = ref('')
   const wordNumFront = ref(0)
   const wordNumBack = ref(0)
   const symbolFront = '('
@@ -15,18 +16,24 @@ import { ref, computed } from 'vue'
     // ()がある場合、そこだけ切り出す
     wordNumFront.value = inputSent.value.indexOf(symbolFront);
     wordNumBack.value = inputSent.value.indexOf(symbolBack);
+    
     if (wordNumFront.value > 0 && wordNumBack.value > 0) {
       testSent.value = inputSent.value.substring(wordNumFront.value + 1, wordNumBack.value);
-      testSentKeep.value = inputSent.value.substring(0, wordNumFront.value);
+      testSentKeepFront.value = inputSent.value.substring(0, wordNumFront.value);
+      testSentKeepBack.value = inputSent.value.substring(wordNumBack.value, inputSent.length);
     } else {
       testSent.value = inputSent.value;
-      testSentKeep.value = '';
+      testSentKeepFront.value = '';
+      testSentKeepBack.value = '';
     }
     var reEnglishWord;
   	if(inputSent.value) {
       reEnglishWord = shuffle(testSent.value.split(" ")).join(symbolLine);
-      if(testSentKeep) {
-        reEnglishWord = testSentKeep.value + symbolFront + reEnglishWord + symbolBack;
+      if(testSentKeepFront.value) {
+        reEnglishWord = testSentKeepFront.value + symbolFront + reEnglishWord;
+        if(testSentKeepBack.value){
+          reEnglishWord = reEnglishWord + testSentKeepBack.value
+        }
       }
     }
     return reEnglishWord;
