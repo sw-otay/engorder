@@ -1,40 +1,42 @@
 <script setup>
 import { ref, computed } from 'vue'
 
-  const inputSent = ref('')
-  const testSent = ref('')
-  const testSentKeepFront = ref('')
-  const testSentKeepBack = ref('')
-  const wordNumFront = ref(0)
-  const wordNumBack = ref(0)
-  const symbolFront = '('
-  const symbolBack = ')'
-  const symbolLine = ' / '
+  const inputSentence = ref('')
 
-  //英単語を入れ替える。
   const replacedEnglishWord = computed(() => {
-    // ()がある場合、そこだけ切り出す
-    wordNumFront.value = inputSent.value.indexOf(symbolFront);
-    wordNumBack.value = inputSent.value.indexOf(symbolBack);
     
-    if (wordNumFront.value > 0 && wordNumBack.value > 0) {
-      testSent.value = inputSent.value.substring(wordNumFront.value + 1, wordNumBack.value);
-      testSentKeepFront.value = inputSent.value.substring(0, wordNumFront.value);
-      testSentKeepBack.value = inputSent.value.substring(wordNumBack.value, inputSent.length);
+    let testSentence = ''
+    let testSentenceKeepFront = ''
+    let testSentenceKeepBack = ''
+    let wordNumFront = 0
+    let wordNumBack = 0
+    const symbolFront = '('
+    const symbolBack = ')'
+    const symbolLine = ' / '
+    const symbolDot = '.'
+    
+    wordNumFront = inputSentence.value.indexOf(symbolFront);
+    wordNumBack = inputSentence.value.indexOf(symbolBack);
+    
+    if (wordNumFront > 0 && wordNumBack > 0) {
+      testSentence = inputSentence.value.substring(wordNumFront + 1, wordNumBack);
+      testSentenceKeepFront = inputSentence.value.substring(0, wordNumFront);
+      testSentenceKeepBack = inputSentence.value.substring(wordNumBack, inputSentence.length);
     } else {
-      testSent.value = inputSent.value;
-      testSentKeepFront.value = '';
-      testSentKeepBack.value = '';
+      testSentence = inputSentence.value;
+      testSentenceKeepFront = '';
+      testSentenceKeepBack = '';
     }
-    var reEnglishWord;
-  	if(inputSent.value) {
-      reEnglishWord = shuffle(testSent.value.split(" ")).join(symbolLine);
-      if(testSentKeepFront.value) {
-        reEnglishWord = testSentKeepFront.value + symbolFront + reEnglishWord;
-        if(testSentKeepBack.value){
-          reEnglishWord = reEnglishWord + testSentKeepBack.value
+    var reEnglishWord = '';
+  	if(inputSentence.value) {
+      reEnglishWord = shuffle(testSentence.split(" ")).join(symbolLine);
+      if(testSentenceKeepFront) {
+        reEnglishWord = testSentenceKeepFront + symbolFront + ' ' + reEnglishWord;
+        if(testSentenceKeepBack){
+          reEnglishWord = reEnglishWord + testSentenceKeepBack;
         }
       }
+    	reEnglishWord = reEnglishWord + ' ' + symbolDot
     }
     return reEnglishWord;
 	})
@@ -50,7 +52,17 @@ import { ref, computed } from 'vue'
 <template>
   <main>
     <h1>英語テスト作成</h1>
-    <textarea v-model="inputSent" placeholder="add inputSent"></textarea>
+    <p>
+      テキストボックスに英文を入力してください。<br/>
+      <ul>
+        <li>一文ずつ入力する</li>
+        <li>単語と単語の間は半角スペースを開ける</li>
+        <li>一部分だけ並べ替えたい場合は、並べ替えたい部分を半角括弧()で囲む</li>
+        <li>.はつけない</li>
+        <li>改行を入れない</li>
+      </ul>
+    </p>
+    <textarea v-model="inputSentence" placeholder="add inputSentence"></textarea>
     
     <h2>英語テスト作成結果</h2>
 		<p>
