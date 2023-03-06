@@ -8,40 +8,34 @@ import { ref, computed } from 'vue'
     let testSentence = ''
     let testSentenceKeepFront = ''
     let testSentenceKeepBack = ''
-    let wordNumFront = 0
-    let wordNumBack = 0
     const symbolFront = '('
     const symbolBack = ')'
     const symbolLine = ' / '
     const symbolDot = '.'
-    
-    wordNumFront = inputSentence.value.indexOf(symbolFront);
-    wordNumBack = inputSentence.value.indexOf(symbolBack);
-    
-    if (wordNumFront > 0 && wordNumBack > 0) {
-      testSentence = inputSentence.value.substring(wordNumFront + 1, wordNumBack);
-      testSentenceKeepFront = inputSentence.value.substring(0, wordNumFront);
-      testSentenceKeepBack = inputSentence.value.substring(wordNumBack, inputSentence.length);
+
+    if (inputSentence.value.includes('(') && inputSentence.value.includes(')')) {
+      [
+        testSentenceKeepFront,
+        testSentence,
+        testSentenceKeepBack,
+      ] = inputSentence.value.split(/[\(\)]/)
     } else {
-      testSentence = inputSentence.value;
-      testSentenceKeepFront = '';
-      testSentenceKeepBack = '';
+      testSentence = inputSentence.value
     }
-    var reEnglishWord = '';
+    
+    let reEnglishWord = '';
   	if(inputSentence.value) {
       reEnglishWord = shuffle(testSentence.split(" ")).join(symbolLine);
-      if(testSentenceKeepFront) {
-        reEnglishWord = testSentenceKeepFront + symbolFront + ' ' + reEnglishWord;
-        if(testSentenceKeepBack){
-          reEnglishWord = reEnglishWord + testSentenceKeepBack;
-        }
+
+    	if (inputSentence.value.includes('(') && inputSentence.value.includes(')')) {
+    		reEnglishWord = testSentenceKeepFront + ' ' + symbolFront + ' ' + reEnglishWord + symbolBack + ' ' + testSentenceKeepBack;
       }
-    	reEnglishWord = reEnglishWord + ' ' + symbolDot
+      reEnglishWord = reEnglishWord + symbolDot;
     }
     return reEnglishWord;
 	})
   const shuffle = ([...array]) => {
-    for (var i = array.length - 1; i >= 0; i--) {
+    for (let i = array.length - 1; i >= 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
@@ -62,15 +56,14 @@ import { ref, computed } from 'vue'
         <li>改行を入れない</li>
       </ul>
     </p>
-    <textarea v-model="inputSentence" placeholder="add inputSentence"></textarea>
+    <textarea v-model="inputSentence" placeholder="ここに英文を入力"></textarea>
     
     <h2>英語テスト作成結果</h2>
 		<p>
       以下の語を、正しい英文になるように並び替えなさい。
     </p>
-    <template v-for="value in replacedEnglishWord">
-        {{ value }}
-    </template>
+      {{ replacedEnglishWord }}
+
   </main>
 </template>
 
