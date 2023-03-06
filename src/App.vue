@@ -8,10 +8,6 @@ import { ref, computed } from 'vue'
     let testSentence = ''
     let testSentenceKeepFront = ''
     let testSentenceKeepBack = ''
-    const symbolFront = '('
-    const symbolBack = ')'
-    const symbolLine = ' / '
-    const symbolDot = '.'
 
     if (inputSentence.value.includes('(') && inputSentence.value.includes(')')) {
       [
@@ -25,18 +21,17 @@ import { ref, computed } from 'vue'
     
     let reEnglishWord = '';
   	if(inputSentence.value) {
-      reEnglishWord = shuffle(testSentence.split(" ")).join(symbolLine);
-
+      reEnglishWord = shuffle(testSentence.split(" ")).join(' / ');
     	if (inputSentence.value.includes('(') && inputSentence.value.includes(')')) {
-    		reEnglishWord = testSentenceKeepFront + ' ' + symbolFront + ' ' + reEnglishWord + symbolBack + ' ' + testSentenceKeepBack;
+    		reEnglishWord = testSentenceKeepFront + ' (' + reEnglishWord + ') ' + testSentenceKeepBack;
       }
-      reEnglishWord = reEnglishWord + symbolDot;
+      reEnglishWord = reEnglishWord + '.';
     }
     return reEnglishWord;
 	})
   const shuffle = ([...array]) => {
     for (let i = array.length - 1; i >= 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
+      let j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
